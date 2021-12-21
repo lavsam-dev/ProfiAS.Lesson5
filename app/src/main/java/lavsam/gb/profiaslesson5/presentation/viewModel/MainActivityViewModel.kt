@@ -1,14 +1,16 @@
-package lavsam.gb.profiaslesson5.historyscreen.presentation.viewModel
+package lavsam.gb.profiaslesson5.presentation.viewModel
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import lavsam.gb.profiaslesson5.core.presentation.viewModel.base.BaseViewModel
-import lavsam.gb.profiaslesson5.historyscreen.domain.interactor.HistoryInteractor
+import lavsam.gb.profiaslesson5.domain.interactor.MainInteractor
 import lavsam.gb.profiaslesson5.model.AppState
-import lavsam.gb.profiaslesson5.utils.parseLocalSearchResults
+import lavsam.gb.profiaslesson5.utils.parseOnlineSearchResults
 
-class HistoryActivityViewModel(
-    private val historyInteractor: HistoryInteractor
+class MainActivityViewModel(
+    private val mainInteractor: MainInteractor
 ) : BaseViewModel<AppState>() {
 
     private val liveDataForViewToObserve: LiveData<AppState> = _mutableLiveData
@@ -21,16 +23,17 @@ class HistoryActivityViewModel(
         viewModelCoroutineScope.launch { startInteractor(word, isOnline) }
     }
 
-    private suspend fun startInteractor(word: String, isOnline: Boolean) {
-        _mutableLiveData.postValue(
-            parseLocalSearchResults(
-                historyInteractor.getData(
-                    word,
-                    isOnline
+    private suspend fun startInteractor(word: String, isOnline: Boolean) =
+        withContext(Dispatchers.IO) {
+            _mutableLiveData.postValue(
+                parseOnlineSearchResults(
+                    mainInteractor.getData(
+                        word,
+                        isOnline
+                    )
                 )
             )
-        )
-    }
+        }
 
     override fun handleError(error: Throwable) {
         _mutableLiveData.postValue(AppState.Error(error))
