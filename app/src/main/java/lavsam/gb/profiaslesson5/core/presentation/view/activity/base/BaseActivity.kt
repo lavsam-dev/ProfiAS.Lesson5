@@ -10,6 +10,8 @@ import lavsam.gb.profiaslesson5.core.presentation.viewModel.base.BaseViewModel
 import lavsam.gb.profiaslesson5.databinding.LoadingLayoutBinding
 import lavsam.gb.profiaslesson5.model.AppState
 import lavsam.gb.profiaslesson5.model.VocabularyDataModel
+import lavsam.gb.profiaslesson5.utils.makeGone
+import lavsam.gb.profiaslesson5.utils.makeVisible
 import lavsam.gb.profiaslesson5.utils.network.isOnline
 import lavsam.gb.profiaslesson5.utils.ui.AlertDialogFragment
 
@@ -42,7 +44,7 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
     protected fun renderData(appState: T) {
         when (appState) {
             is AppState.Success -> {
-                showViewWorking()
+                binding.loadingFrameLayout.makeGone()
                 appState.data?.let {
                     if (it.isEmpty()) {
                         showAlertDialog(
@@ -55,18 +57,10 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
                 }
             }
             is AppState.Loading -> {
-                showViewLoading()
-                if (appState.loading != null) {
-                    binding.progressBarHorizontal.visibility = View.VISIBLE
-                    binding.progressBarRound.visibility = View.GONE
-                    binding.progressBarHorizontal.progress = appState.loading!!
-                } else {
-                    binding.progressBarHorizontal.visibility = View.GONE
-                    binding.progressBarRound.visibility = View.VISIBLE
-                }
+                binding.loadingFrameLayout.makeVisible()
             }
             is AppState.Error -> {
-                showViewWorking()
+                binding.loadingFrameLayout.makeGone()
                 showAlertDialog(getString(R.string.error_stub), appState.error.message)
             }
         }
@@ -83,14 +77,14 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
         AlertDialogFragment.newInstance(title, message)
             .show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
     }
-
-    private fun showViewWorking() {
-        binding.loadingFrameLayout.visibility = View.GONE
-    }
-
-    private fun showViewLoading() {
-        binding.loadingFrameLayout.visibility = View.VISIBLE
-    }
+//
+//    private fun showViewWorking() {
+//        binding.loadingFrameLayout.visibility = View.GONE
+//    }
+//
+//    private fun showViewLoading() {
+//        binding.loadingFrameLayout.visibility = View.VISIBLE
+//    }
 
     private fun isDialogNull(): Boolean {
         return supportFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null

@@ -10,6 +10,8 @@ import lavsam.gb.profiaslesson5.model.AppState
 import lavsam.gb.profiaslesson5.model.VocabularyDataModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+private const val VIEWMODEL_INITIAL_FIRST = "The ViewModel should be initialised first"
+
 class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
 
     private lateinit var binding: ActivityHistoryBinding
@@ -39,7 +41,7 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
 
     private fun iniViewModel() {
         if (binding.historyActivityRecyclerview.adapter != null) {
-            throw IllegalStateException("The ViewModel should be initialised first")
+            throw IllegalStateException(VIEWMODEL_INITIAL_FIRST)
         }
         val historyViewModel: HistoryActivityViewModel by viewModel()
         viewModel = historyViewModel
