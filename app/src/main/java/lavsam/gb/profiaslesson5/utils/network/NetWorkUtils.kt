@@ -2,12 +2,41 @@ package lavsam.gb.profiaslesson5.utils.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.Network
+import android.net.NetworkRequest
+import androidx.lifecycle.LiveData
 
-fun isOnline(context: Context): Boolean {
-    val connectivityManager =
+class LiveDataOnline(context: Context) : LiveData<Boolean>() {
+    private val availableNetworks = mutableSetOf<Network>()
+
+    private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val netInfo: NetworkInfo?
-    netInfo = connectivityManager.activeNetworkInfo
-    return netInfo != null && netInfo.isConnected
+
+    private val request: NetworkRequest = NetworkRequest.Builder().build()
+
+    private val callback = object : ConnectivityManager.NetworkCallback() {
+        override fun onLost(network: Network) {
+            availableNetworks.remove(network)
+            update(availableNetworks.isNotEmpty())
+        }
+
+        override fun onAvailable(network: Network) {
+            availableNetworks.add(network)
+            update(availableNetworks.isNotEmpty())
+        }
+    }
+
+    override fun onActive() {
+        connectivityManager.registerNetworkCallback(request, callback)
+    }
+
+    override fun onInactive() {
+        connectivityManager.unregisterNetworkCallback(callback)
+    }
+
+    private fun update(online: Boolean) {
+        if (online != value) {
+            postValue(online)
+        }
+    }
 }

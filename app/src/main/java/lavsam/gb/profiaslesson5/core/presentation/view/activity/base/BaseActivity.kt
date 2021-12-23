@@ -2,7 +2,7 @@ package lavsam.gb.profiaslesson5.core.presentation.view.activity.base
 
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import lavsam.gb.profiaslesson5.R
 import lavsam.gb.profiaslesson5.core.domain.interactor.Interactor
@@ -12,7 +12,7 @@ import lavsam.gb.profiaslesson5.model.AppState
 import lavsam.gb.profiaslesson5.model.VocabularyDataModel
 import lavsam.gb.profiaslesson5.utils.makeGone
 import lavsam.gb.profiaslesson5.utils.makeVisible
-import lavsam.gb.profiaslesson5.utils.network.isOnline
+import lavsam.gb.profiaslesson5.utils.network.LiveDataOnline
 import lavsam.gb.profiaslesson5.utils.ui.AlertDialogFragment
 
 private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
@@ -23,11 +23,27 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
 
     abstract val viewModel: BaseViewModel<T>
 
-    protected var isNetworkAvailable: Boolean = false
+    protected var isNetworkAvailable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
-        isNetworkAvailable = isOnline(applicationContext)
+        subscribeToNetworkChange()
+    }
+
+    private fun subscribeToNetworkChange() {
+        LiveDataOnline(this).observe(
+            this@BaseActivity,
+            {
+                isNetworkAvailable = it
+                if (!isNetworkAvailable) {
+                    Toast.makeText(
+                        this@BaseActivity,
+                        R.string.dialog_message_device_is_offline,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        )
     }
 
     override fun onResume() {
@@ -35,7 +51,6 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
 
         binding = LoadingLayoutBinding.inflate(layoutInflater)
 
-        isNetworkAvailable = isOnline(applicationContext)
         if (!isNetworkAvailable && isDialogNull()) {
             showNoInternetConnectionDialog()
         }
@@ -77,14 +92,6 @@ abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity
         AlertDialogFragment.newInstance(title, message)
             .show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
     }
-//
-//    private fun showViewWorking() {
-//        binding.loadingFrameLayout.visibility = View.GONE
-//    }
-//
-//    private fun showViewLoading() {
-//        binding.loadingFrameLayout.visibility = View.VISIBLE
-//    }
 
     private fun isDialogNull(): Boolean {
         return supportFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null

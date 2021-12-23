@@ -17,7 +17,6 @@ import lavsam.gb.profiaslesson5.presentation.adapter.MainActivityAdapter
 import lavsam.gb.profiaslesson5.presentation.view.fragment.SearchDialogFragment
 import lavsam.gb.profiaslesson5.presentation.viewModel.MainActivityViewModel
 import lavsam.gb.profiaslesson5.utils.convertMeaningsToString
-import lavsam.gb.profiaslesson5.utils.network.isOnline
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG = "74a54328-5d62-46bf-ab6b-cbf5fgt0-092395"
@@ -57,7 +56,6 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private val onSearchClickListener: SearchDialogFragment.OnSearchClickListener =
         object : SearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
-                isNetworkAvailable = isOnline(applicationContext)
                 if (isNetworkAvailable) {
                     viewModel.getData(searchWord, isNetworkAvailable)
                 } else {
@@ -99,6 +97,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         if (binding.mainActivityRecyclerview.adapter != null) {
             throw IllegalStateException(VIEWMODEL_INIT_FIRST)
         }
+//        val mainActivityViewModel: MainActivityViewModel by viewModel()
         val mainActivityViewModel: MainActivityViewModel by viewModel()
         viewModel = mainActivityViewModel
         viewModel.subscribe().observe(this@MainActivity, { renderData(it) })

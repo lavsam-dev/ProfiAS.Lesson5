@@ -1,6 +1,5 @@
 package lavsam.gb.profiaslesson5.utils
 
-import lavsam.gb.profiaslesson5.data.room.HistoryEntity
 import lavsam.gb.profiaslesson5.model.AppState
 import lavsam.gb.profiaslesson5.model.Meanings
 import lavsam.gb.profiaslesson5.model.VocabularyDataModel
@@ -20,7 +19,8 @@ private fun mapResult(
         is AppState.Success -> {
             getSuccessResultData(appState, isOnline, newSearchResults)
         }
-        else -> {}
+        else -> {
+        }
     }
     return newSearchResults
 }
@@ -60,31 +60,6 @@ private fun parseOnlineResult(
         }
     }
 }
-
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<VocabularyDataModel> {
-    val searchResult = ArrayList<VocabularyDataModel>()
-    if (!list.isNullOrEmpty()) {
-        for (entity in list) {
-            searchResult.add(VocabularyDataModel(entity.word, null))
-        }
-    }
-    return searchResult
-}
-
-fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
-    return when (appState) {
-        is AppState.Success -> {
-            val searchResult = appState.data
-            if (searchResult.isNullOrEmpty() || searchResult[0].text.isNullOrEmpty()) {
-                null
-            } else {
-                HistoryEntity(searchResult[0].text!!, null)
-            }
-        }
-        else -> null
-    }
-}
-
 
 fun convertMeaningsToString(meanings: List<Meanings>): String {
     var meaningsSeparatedByComma = String()
