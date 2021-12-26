@@ -41,7 +41,7 @@ class MainActivityAdapter(
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.header_textview_recycler_item.text = data.text
                 itemView.description_textview_recycler_item.text =
-                    convertMeaningsToString(data.meanings!!)
+                    convertMeaningsToString(data.meanings)
                 itemView.setOnClickListener { openInNewWindow(data) }
             }
         }

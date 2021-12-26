@@ -17,7 +17,7 @@ import lavsam.gb.profiaslesson5.utils.ui.AlertDialogFragment
 
 private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
 
-abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity() {
+abstract class BaseActivity<T : AppState,I : Interactor<T>> : AppCompatActivity() {
 
     private lateinit var binding: LoadingLayoutBinding
 

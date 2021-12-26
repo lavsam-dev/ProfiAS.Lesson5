@@ -25,7 +25,7 @@ import lavsam.gb.profiaslesson5.presentation.adapter.MainActivityAdapter
 import lavsam.gb.profiaslesson5.presentation.view.fragment.SearchDialogFragment
 import lavsam.gb.profiaslesson5.presentation.viewModel.MainActivityViewModel
 import lavsam.gb.profiaslesson5.utils.convertMeaningsToString
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.scope.currentScope
 import kotlin.random.Random
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
@@ -51,9 +51,9 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 startActivity(
                     DescriptionActivity.getIntent(
                         this@MainActivity,
-                        data.text!!,
-                        convertMeaningsToString(data.meanings!!),
-                        data.meanings!![0].imageUrl
+                        data.text,
+                        convertMeaningsToString(data.meanings),
+                        data.meanings[0].imageUrl
                     )
                 )
             }
@@ -104,7 +104,8 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         if (binding.mainActivityRecyclerview.adapter != null) {
             throw IllegalStateException(VIEWMODEL_INIT_FIRST)
         }
-        val mainActivityViewModel: MainActivityViewModel by viewModel()
+//        val mainActivityViewModel: MainActivityViewModel by viewModel()
+        val mainActivityViewModel: MainActivityViewModel by currentScope.inject()
         viewModel = mainActivityViewModel
         viewModel.subscribe().observe(this@MainActivity, { renderData(it) })
     }

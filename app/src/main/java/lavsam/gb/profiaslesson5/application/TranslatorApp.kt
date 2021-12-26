@@ -6,12 +6,13 @@ import lavsam.gb.profiaslesson5.di.historyScreen
 import lavsam.gb.profiaslesson5.di.mainScreen
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext
+import org.koin.core.context.startKoin
 
 class TranslatorApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        GlobalContext.startKoin {
+        startKoin {
             androidContext(applicationContext)
             modules(
                 listOf(

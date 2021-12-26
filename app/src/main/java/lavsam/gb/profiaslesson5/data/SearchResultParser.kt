@@ -8,7 +8,7 @@ fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<VocabularyDa
     val searchResult = ArrayList<VocabularyDataModel>()
     if (!list.isNullOrEmpty()) {
         for (entity in list) {
-            searchResult.add(VocabularyDataModel(entity.word, null))
+            searchResult.add(VocabularyDataModel(entity.word, listOf()))
         }
     }
     return searchResult
@@ -21,7 +21,7 @@ fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
             if (searchResult.isNullOrEmpty() || searchResult[0].text.isNullOrEmpty()) {
                 null
             } else {
-                HistoryEntity(searchResult[0].text!!, null)
+                HistoryEntity(searchResult[0].text, "")
             }
         }
         else -> null

@@ -50,8 +50,8 @@ private fun parseOnlineResult(
 ) {
     if (!vocabularyDataModel.text.isNullOrBlank() && !vocabularyDataModel.meanings.isNullOrEmpty()) {
         val newMeanings = arrayListOf<Meanings>()
-        for (meaning in vocabularyDataModel.meanings!!) {
-            if (meaning.translation != null && !meaning.translation!!.translation.isNullOrBlank()) {
+        for (meaning in vocabularyDataModel.meanings) {
+            if (meaning.translation != null && !meaning.translation.translation.isNullOrBlank()) {
                 newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
             }
         }

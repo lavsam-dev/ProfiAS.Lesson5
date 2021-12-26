@@ -8,7 +8,7 @@ import lavsam.gb.profiaslesson5.historyscreen.presentation.adapter.HistoryActivi
 import lavsam.gb.profiaslesson5.historyscreen.presentation.viewModel.HistoryActivityViewModel
 import lavsam.gb.profiaslesson5.model.AppState
 import lavsam.gb.profiaslesson5.model.VocabularyDataModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.scope.currentScope
 
 private const val VIEWMODEL_INITIAL_FIRST = "The ViewModel should be initialised first"
 
@@ -43,7 +43,7 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
         if (binding.historyActivityRecyclerview.adapter != null) {
             throw IllegalStateException(VIEWMODEL_INITIAL_FIRST)
         }
-        val historyViewModel: HistoryActivityViewModel by viewModel()
+        val historyViewModel: HistoryActivityViewModel by currentScope.inject()
         viewModel = historyViewModel
         viewModel.subscribe().observe(this@HistoryActivity, { renderData(it) })
     }
